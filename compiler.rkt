@@ -128,7 +128,7 @@
     [`(,(? bop? bop) ,e0 ,e1) `(,bop ,(ifarith->ifarith-tiny e0) ,(ifarith->ifarith-tiny e1))]
     [`(,(? uop? uop) ,e) `(,uop ,(ifarith->ifarith-tiny e))]
     ;; 0-binding case
-    [`(let* () ,e) 'todo]                                              ;; TODO
+    [`(let* () ,e) (ifarith->ifarith-tiny e)]                          ;; TODO - NOW TEST
     ;; 1+-binding case
     [`(let* ([,(? symbol? x0) ,e0]) ,e-body)                           ;; TODO
      'todo]
