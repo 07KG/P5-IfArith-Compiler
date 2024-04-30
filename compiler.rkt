@@ -128,12 +128,13 @@
     [`(,(? bop? bop) ,e0 ,e1) `(,bop ,(ifarith->ifarith-tiny e0) ,(ifarith->ifarith-tiny e1))]
     [`(,(? uop? uop) ,e) `(,uop ,(ifarith->ifarith-tiny e))]
     ;; 0-binding case
-    [`(let* () ,e) (ifarith->ifarith-tiny e)]                          ;; TODO - NOW TEST
+    [`(let* () ,e) (ifarith->ifarith-tiny e)] ;; DONE
     ;; 1+-binding case
-    [`(let* ([,(? symbol? x0) ,e0]) ,e-body)                           ;; TODO
-     'todo]
-    [`(let* ([,(? symbol? x0) ,e0] ,rest-binding-pairs ...) ,e-body)   ;; TODO
-     'todo]
+    [`(let* ([,(? symbol? x0) ,e0]) ,e-body)  ;; DONE
+     `(let([,x0 ,(ifarith->ifarith-tiny e0)]) ,(ifarith->ifarith-tiny e-body))]
+    [`(let* ([,(? symbol? x0) ,e0] ,rest-binding-pairs ...) ,e-body) ;; DONE
+     `(let ([,x0 ,(ifarith->ifarith-tiny e0)])
+        ,(ifarith->ifarith-tiny `(let* ,rest-binding-pairs ,e-body)))]
     ;; print an arbitrary expression (must be a number at runtime)
     [`(print ,_) e]
     ;; and/or, with short-circuiting semantics
