@@ -1,0 +1,4 @@
+(let* ([a 1] [b 2])
+(let* ([b 3] [c b])
+(let* ([a 4] [d a])
+   			(print (* a (+ b (- d c)))))))
