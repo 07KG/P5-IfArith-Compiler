@@ -74,8 +74,10 @@ For this question, please add your `.ifa` programs either (a) here or
 (b) to the repo and write where they are in this file.
 
 --START--
+
 Input: (print (/ (* 10 (- 3 2)) 5))
 Output: hash-ref no value found for the key; key: /
+
    1.5 - Input: (print (*(* 10 (- 3 2)) 5))
 Output: 50
 
