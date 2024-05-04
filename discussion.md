@@ -111,6 +111,20 @@ there could be more?
 In answering this question, you must use specific examples that you
 got from running the compiler and generating an output.
 
+--START--
+IfArith-tiny is just a smaller version of IfArtith it takes out a lot of the let*’s and a few specific forms like “and” and “or”. (Basically just desugaring). As such IfArith-to-IfArith-tiny makes sure that the commands like “and” and “or” that aren’t present in Ifarith-tiny do get bound to something in IfArith so that as the simpler IfArith-tiny gets compiled and more compacted further down, it knows where to map onto and there’s less of a chance to get errors. IfArith is turned into IfArith-tiny in the first place because not everything in If-Arith is necessary. In the compiler itself, it states that “let* can be written as a sequence of single-binding lets….forms for and/or/cond can be compiled to usages of `if`” and simplifying it just makes it simpler and faster for the machine to compile.
+
+The second pass turns Ifarith-tiny into A-Normal Form (ANF). It simplifies complex arguments that require callbacks to calculations. Such as multiplying two factors that were previously two numbers added together. It does this by breaking the code and commands down into a series of lets. This seems to be the point of “normalize”, “normalize-term” and “normalize-name.” 
+
+Next, the compiler turns the ANF into IR-Virtual. We do this instead of going straight to x86 because the Ir-Virtual just sticks everything into the stack so that it allows for more space. It may slow down computation but it allows as many variables as we need even if there aren’t enough registers. Converting the ANF into IR-Virtual linearizes the code because the code at this point is a branch of let statements that go towards one end, converting it into Ir-Virtual makes it so that the commands execute in a step-by-step sequence, each with their own specific instructions as per the virtual-instr? that was defined earlier. 
+
+Finally, IR-Virtual to x86. First it sees which registers are used and puts it in the stack (since the IR-Virtual just stuck everything where it sticks). This translates the virtual-instr? commands into assembly instructions using foldl. 
+
+X86 to NASM assembly this just allows it to run. NASM assembly stands for the netwide assembler. It works for 16-bit, 32-bit, and 64-bit programs and it basically allows the code to run and produce an output on the machine. 
+
+The passes don’t necessarily seem redundant. If we were to add another pass, we would consider further simplifying let and let* statements between ANF and IR-virtual. However, the IR-Virtual pass could be made more efficient. Where x86 observes the work done by IR-Virtual and translates the instructions into assembly, we believe this could potentially be done within the same pass, saving some time.
+--END--
+
 [ Question 4 ] 
 
 This is a larger project, compared to our previous projects. This
